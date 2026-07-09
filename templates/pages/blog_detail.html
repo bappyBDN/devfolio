@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ post.title }} | DevFolio Pro Blog{% endblock %}
+
+{% block content %}
+
+<article class="section bg-surface">
+    <div class="container container-narrow">
+
+        <a href="{% url 'blog:blog_list' %}" class="mono text-decoration-none d-inline-block mb-4" style="color: var(--ink-faint);">
+            <i class="bi bi-arrow-left me-1"></i> back to writing
+        </a>
+
+        <span class="eyebrow">post.detail()</span>
+        <h1 class="fw-bold mb-3" style="font-size: 2.4rem;">{{ post.title }}</h1>
+
+        <div class="mono small mb-5" style="color: var(--ink-faint);">
+            {{ post.created_at|date:"F d, Y" }}
+            {% if post.reading_time %} &middot; {{ post.reading_time }} min read{% endif %}
+            {% if post.views_count %} &middot; {{ post.views_count }} views{% endif %}
+        </div>
+
+        {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="w-100 rounded-4 mb-5" style="max-height: 420px; object-fit: cover;">
+        {% endif %}
+
+        <div class="markdown-body">
+            {{ rendered_content|safe }}
+        </div>
+
+        <hr class="my-5">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <a href="{% url 'blog:blog_list' %}" class="btn btn-df-outline">
+                <i class="bi bi-arrow-left me-1"></i> All posts
+            </a>
+            <div class="d-flex gap-3 fs-5">
+                <a href="mailto:hello@devfoliopro.dev?subject=Re: {{ post.title }}" aria-label="Discuss via email">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

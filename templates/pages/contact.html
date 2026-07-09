@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact | DevFolio Pro{% endblock %}
+
+{% block content %}
+
+<section class="section-tight bg-surface section-border-b">
+    <div class="container">
+        <span class="eyebrow">contact.form()</span>
+        <h1 class="fw-bold mb-2">Get in touch</h1>
+        <p class="mb-0" style="color: var(--ink-soft);">
+            Questions, collaborations, or just want to say hi — the form goes straight to my inbox.
+        </p>
+    </div>
+</section>
+
+<section class="section bg-paper">
+    <div class="container">
+        <div class="row g-5">
+
+            <div class="col-lg-7">
+
+                {% if form_success %}
+                <div class="form-status success">
+                    <i class="bi bi-check-circle me-1"></i> Message sent — I'll get back to you soon.
+                </div>
+                {% endif %}
+                {% if form_error %}
+                <div class="form-status error">
+                    <i class="bi bi-exclamation-circle me-1"></i> {{ form_error }}
+                </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'contact:contact' %}" class="needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="df-field">
+                                <label class="df-label" for="id_name">name</label>
+                                <input type="text" class="df-input" id="id_name" name="sender_name" required maxlength="100">
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="df-field">
+                                <label class="df-label" for="id_email">email</label>
+                                <input type="email" class="df-input" id="id_email" name="sender_email" required maxlength="100">
+                                <div class="invalid-feedback">Please enter a valid email.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="df-field">
+                        <label class="df-label" for="id_subject">subject</label>
+                        <input type="text" class="df-input" id="id_subject" name="subject" maxlength="200">
+                    </div>
+
+                    <div class="df-field">
+                        <label class="df-label" for="id_message">message</label>
+                        <textarea class="df-textarea" id="id_message" name="message" required></textarea>
+                        <div class="invalid-feedback">Please enter a message.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-df-primary">
+                        <i class="bi bi-send me-1"></i> Send Message
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="contact-info-card mb-4">
+                    <div class="contact-info-row">
+                        <div class="contact-info-icon"><i class="bi bi-envelope"></i></div>
+                        <div>
+                            <div class="mono small" style="color: var(--ink-faint);">email</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span>hello@devfoliopro.dev</span>
+                                <button type="button" class="btn btn-sm p-0 border-0" data-copy="hello@devfoliopro.dev" aria-label="Copy email" style="color: var(--ink-faint);">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-info-row">
+                        <div class="contact-info-icon"><i class="bi bi-geo-alt"></i></div>
+                        <div>
+                            <div class="mono small" style="color: var(--ink-faint);">location</div>
+                            <div>Dhaka, Bangladesh</div>
+                        </div>
+                    </div>
+                    <div class="contact-info-row">
+                        <div class="contact-info-icon"><i class="bi bi-clock"></i></div>
+                        <div>
+                            <div class="mono small" style="color: var(--ink-faint);">response time</div>
+                            <div>Usually within 24–48 hours</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-placeholder">
+                    <div>
+                        <i class="bi bi-geo-alt-fill"></i>
+                        map preview — embed Google Maps here
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

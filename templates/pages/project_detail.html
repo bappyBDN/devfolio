@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} | DevFolio Pro{% endblock %}
+
+{% block content %}
+
+<section class="section-tight bg-ink section-border-b">
+    <div class="container">
+        <a href="{% url 'projects:project_list' %}" class="mono text-decoration-none text-on-dark-soft">
+            <i class="bi bi-arrow-left me-1"></i> back to projects
+        </a>
+
+        <div class="row mt-4">
+            <div class="col-lg-8">
+                <span class="eyebrow text-on-dark-faint">project.detail()</span>
+                <h1 class="fw-bolder mb-3 text-on-dark">{{ project.title }}</h1>
+                <p class="mb-4 text-on-dark-soft" style="font-size: 1.1rem; max-width: 60ch;">
+                    {{ project.short_desc }}
+                </p>
+
+                <div class="mb-4">
+                    {% for tech in project.technologies.all %}
+                    <span class="tag tag-amber">{{ tech.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    {% if project.github_link %}
+                    <a href="{{ project.github_link }}" target="_blank" rel="noopener" class="btn btn-df-outline-invert">
+                        <i class="bi bi-github me-1"></i> View Code
+                    </a>
+                    {% endif %}
+                    {% if project.live_link %}
+                    <a href="{{ project.live_link }}" target="_blank" rel="noopener" class="btn btn-df-accent">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Live Demo
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if project.images.all %}
+<section class="section-tight bg-surface section-border-b">
+    <div class="container">
+        <div id="projectCarousel" class="carousel slide term-window" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in project.images.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.url }}" class="d-block w-100" style="height:460px;object-fit:cover;"
+                         alt="{{ image.caption|default:project.title }}">
+                    {% if image.caption %}
+                    <div class="carousel-caption d-none d-md-block rounded-3 p-2"
+                         style="background: rgba(18,20,28,.65);">
+                        <p class="mb-0 small mono">{{ image.caption }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% if project.images.all|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="section bg-paper">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <span class="eyebrow">readme.md</span>
+                <h2 class="fw-bold mb-4">About this project</h2>
+                <div class="markdown-body">
+                    {{ rendered_description|safe }}
+                </div>
+
+                {% if project.video_url %}
+                <h3 class="fw-bold mt-5 mb-3">Demo Video</h3>
+                <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm">
+                    <iframe src="{{ video_embed_url }}" title="{{ project.title }} demo"
+                            allowfullscreen loading="lazy"></iframe>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <div class="df-card df-card-body">
+                    <span class="eyebrow">stack</span>
+                    <h5 class="fw-bold mb-3">Tech Stack</h5>
+                    <div>
+                        {% for tech in project.technologies.all %}
+                        <span class="tag tag-circuit">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if related_projects %}
+<section class="section-tight bg-surface section-border-t">
+    <div class="container">
+        <span class="eyebrow">more-work</span>
+        <h3 class="fw-bold mb-4">More Projects</h3>
+        <div class="row g-4">
+            {% for related in related_projects %}
+            <div class="col-md-4">
+                <a href="{% url 'projects:project_detail' related.slug %}" class="text-decoration-none">
+                    <div class="df-card df-card-body">
+                        <h5 class="fw-bold mb-2" style="color: var(--ink);">{{ related.title }}</h5>
+                        <p class="small mb-0" style="color: var(--ink-soft);">{{ related.short_desc|truncatechars:90 }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resume | DevFolio Pro{% endblock %}
+
+{% block content %}
+
+<section class="section-tight bg-surface section-border-b">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <span class="eyebrow">resume.build()</span>
+                <h1 class="fw-bold mb-2">Resume</h1>
+                <p class="mb-0" style="color: var(--ink-soft);">
+                    Experience, education, and the stack I work in day to day.
+                </p>
+            </div>
+            <a id="downloads" href="https://bappybdn.github.io/CV_final.pdf" target="_blank" download class="btn btn-df-primary">
+                <i class="bi bi-download me-1"></i> Download PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Experience -->
+<section class="section bg-paper">
+    <div class="container">
+        <span class="eyebrow">experience.log()</span>
+        <h2 class="fw-bold mb-5">Experience</h2>
+
+        <div class="gitlog">
+            {% for exp in experiences %}
+            <div class="gitlog-item {% if exp.is_current %}is-current{% endif %}">
+                <div class="gitlog-node"></div>
+                <div class="gitlog-meta">
+                    <span class="gitlog-hash">#{{ forloop.revcounter0|stringformat:"04d" }}</span>
+                    <span>
+                        {{ exp.start_date|date:"M Y" }} &rarr;
+                        {% if exp.is_current %}present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}
+                    </span>
+                    {% if exp.is_current %}<span class="head-badge">HEAD</span>{% endif %}
+                </div>
+                <div class="gitlog-card">
+                    <div class="gitlog-role">{{ exp.role }}</div>
+                    <div class="gitlog-org">{{ exp.company_name }}</div>
+                    <p class="mb-0 small" style="color: var(--ink-soft);">{{ exp.description|linebreaksbr }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="bi bi-briefcase"></i>
+                <h5 class="mb-1">No experience listed yet.</h5>
+                <p class="mb-0">Add entries from the Django admin to populate this timeline.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Education -->
+<section class="section bg-surface section-border-t">
+    <div class="container">
+        <span class="eyebrow">education.list()</span>
+        <h2 class="fw-bold mb-5">Education</h2>
+
+        <div class="row g-4">
+            {% for edu in educations %}
+            <div class="col-md-6">
+                <div class="gitlog-card h-100">
+                    <div class="gitlog-role">{{ edu.degree }}</div>
+                    <div class="gitlog-org">{{ edu.institution_name }}</div>
+                    <div class="mono small" style="color: var(--ink-faint);">
+                        class of {{ edu.passing_year }} &middot; {{ edu.result }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-mortarboard"></i>
+                    <h5 class="mb-1">No education entries yet.</h5>
+                    <p class="mb-0">Add entries from the Django admin to populate this section.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Skills -->
+<section class="section bg-paper section-border-t">
+    <div class="container">
+        <span class="eyebrow">skills.render()</span>
+        <h2 class="fw-bold mb-5">Skills</h2>
+
+        <div class="row g-5">
+            {% regroup skills by get_category_display as skill_groups %}
+            {% for group in skill_groups %}
+            <div class="col-md-6">
+                <h6 class="mono mb-3" style="color: var(--ink-faint);">{{ group.grouper }}</h6>
+                {% for skill in group.list %}
+                <div class="skill-row skill-{{ skill.category }}">
+                    <div class="skill-row-top">
+                        <span class="skill-name">{{ skill.name }}</span>
+                        <span class="skill-pct">{{ skill.proficiency_percentage }}%</span>
+                    </div>
+                    <div class="skill-track">
+                        <div class="skill-fill" style="width: {{ skill.proficiency_percentage }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-bar-chart"></i>
+                    <h5 class="mb-1">No skills listed yet.</h5>
+                    <p class="mb-0">Add entries from the Django admin to populate this section.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Projects | DevFolio Pro{% endblock %}
+
+{% block content %}
+
+<section class="section-tight bg-surface section-border-b">
+    <div class="container">
+        <span class="eyebrow">projects.list()</span>
+        <h1 class="fw-bold mb-2">Projects</h1>
+        <p class="mb-0" style="color: var(--ink-soft);">
+            Production systems, research prototypes, and everything shipped in between.
+        </p>
+    </div>
+</section>
+
+<section class="section bg-paper">
+    <div class="container">
+
+        <!-- Technology filters -->
+        <div class="d-flex flex-wrap gap-2 mb-5">
+            <a href="{% url 'projects:project_list' %}"
+               class="filter-pill text-decoration-none {% if not selected_tech %}active{% endif %}">all</a>
+            {% for tech in technologies %}
+            <a href="{% url 'projects:project_list' %}?tech={{ tech.name }}"
+               class="filter-pill text-decoration-none {% if selected_tech|lower == tech.name|lower %}active{% endif %}">
+                {{ tech.name|lower }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4">
+            {% for project in projects %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'projects:project_detail' project.slug %}" class="text-decoration-none">
+                    <div class="df-card">
+                        <div class="df-card-media">
+                            {% with cover=project.images.first %}
+                            {% if cover %}
+                            <img src="{{ cover.image.url }}" alt="{{ project.title }}" loading="lazy">
+                            {% else %}
+                            <i class="bi bi-code-slash"></i>
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="df-card-body">
+                            <h5 class="fw-bold mb-2" style="color: var(--ink);">{{ project.title }}</h5>
+                            <p class="small mb-3" style="color: var(--ink-soft);">
+                                {{ project.short_desc|truncatechars:110 }}
+                            </p>
+                            <div>
+                                {% for tech in project.technologies.all|slice:":3" %}
+                                <span class="tag tag-circuit">{{ tech.name }}</span>
+                                {% endfor %}
+                                {% if project.technologies.all|length > 3 %}
+                                <span class="tag tag-slate">more</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <h5 class="mb-1">No projects available right now.</h5>
+                    <p class="mb-0">Check back later once the database is updated!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-5" aria-label="Project pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}

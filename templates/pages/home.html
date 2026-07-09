@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bappy — Software Engineer & AI Researcher{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="section-tight bg-surface section-border-b">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <span class="eyebrow">whoami</span>
+                <h1 class="display-4 fw-bold mb-3">Hi, I'm Bappy.</h1>
+                <h2 class="h4 fw-normal mb-4" style="color: var(--ink-soft);">
+                    Software Engineer &amp; AI Researcher
+                </h2>
+                <p class="mb-4" style="max-width: 46ch; color: var(--ink-soft); font-size: 1.05rem;">
+                    I build Vision-Language Models, RAG pipelines, and the production systems
+                    that carry them — turning research methodology into software people
+                    actually ship.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'projects:project_list' %}" class="btn btn-df-primary">View Projects</a>
+                    <a href="https://bappybdn.github.io/index.html" target="_blank" class="btn btn-df-outline">
+                        <i class="bi bi-eye me-1"></i> view Portfolio 
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="term-window">
+                    <div class="term-header">
+                        <span class="term-dot red"></span>
+                        <span class="term-dot amber"></span>
+                        <span class="term-dot green"></span>
+                        <span class="term-title">bappy@devfolio ~ status</span>
+                    </div>
+                    <div class="term-body">
+                        <div class="term-line" data-term-line>
+                            <span class="prompt">$</span>
+                            <span class="val">whoami</span>
+                        </div>
+                        <div class="term-line" data-term-line>
+                            <span class="key">role:</span>
+                            <span class="val">Software Engineer / AI Researcher</span>
+                        </div>
+                        <div class="term-line" data-term-line>
+                            <span class="key">focus:</span>
+                            <span class="val">VLMs · RAG systems · production ML</span>
+                        </div>
+                        <div class="term-line" data-term-line>
+                            <span class="key">stack:</span>
+                            <span class="val">Django · FastAPI · LangChain · PostgreSQL</span>
+                        </div>
+                        <div class="term-line" data-term-line>
+                            <span class="key">status:</span>
+                            <span class="val" style="color: var(--success, #1f9d63);">available for opportunities</span>
+                        </div>
+                        <div class="term-line" data-term-line>
+                            <span class="prompt">$</span>
+                            <span class="term-cursor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects -->
+<section id="projects" class="section bg-paper">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-5">
+            <div>
+                <span class="eyebrow">featured-work</span>
+                <h2 class="fw-bold mb-0">Featured Projects</h2>
+            </div>
+            <a href="{% url 'projects:project_list' %}" class="mono text-decoration-none">
+                view all projects <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for project in featured_projects %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'projects:project_detail' project.slug %}" class="text-decoration-none">
+                    <div class="df-card">
+                        <div class="df-card-media">
+                            {% with cover=project.images.first %}
+                            {% if cover %}
+                            <img src="{{ cover.image.url }}" alt="{{ project.title }}">
+                            {% else %}
+                            <i class="bi bi-code-slash"></i>
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="df-card-body">
+                            <h5 class="fw-bold mb-2" style="color: var(--ink);">{{ project.title }}</h5>
+                            <p class="small mb-3" style="color: var(--ink-soft);">
+                                {{ project.short_desc|truncatechars:110 }}
+                            </p>
+                            <div>
+                                {% for tech in project.technologies.all|slice:":3" %}
+                                <span class="tag tag-circuit">{{ tech.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <h5 class="mb-1">No projects available right now.</h5>
+                    <p class="mb-0">Check back later once the database is updated!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

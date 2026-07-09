@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blog | DevFolio Pro{% endblock %}
+
+{% block content %}
+
+<section class="section-tight bg-surface section-border-b">
+    <div class="container">
+        <span class="eyebrow">blog.list()</span>
+        <h1 class="fw-bold mb-2">Writing</h1>
+        <p class="mb-0" style="color: var(--ink-soft);">
+            Notes on RAG systems, model training, and shipping ML to production.
+        </p>
+    </div>
+</section>
+
+<section class="section bg-paper">
+    <div class="container">
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'blog:blog_detail' post.slug %}" class="text-decoration-none">
+                    <div class="df-card">
+                        <div class="df-card-media">
+                            {% if post.cover_image %}
+                            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy">
+                            {% else %}
+                            <i class="bi bi-journal-text"></i>
+                            {% endif %}
+                        </div>
+                        <div class="df-card-body">
+                            <div class="mono small mb-2" style="color: var(--ink-faint);">
+                                {{ post.created_at|date:"M d, Y" }}
+                                {% if post.reading_time %} &middot; {{ post.reading_time }} min read{% endif %}
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--ink);">{{ post.title }}</h5>
+                            {% if post.excerpt %}
+                            <p class="small mb-0" style="color: var(--ink-soft);">{{ post.excerpt|truncatechars:110 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-journal-x"></i>
+                    <h5 class="mb-1">No posts published yet.</h5>
+                    <p class="mb-0">New technical writing is on the way — check back soon.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-5" aria-label="Blog pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
