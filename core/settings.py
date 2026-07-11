@@ -163,7 +163,7 @@ CLOUDINARY_STORAGE = {
 # AttributeError. Keep BOTH settings in sync — STORAGES is what modern
 # Django actually uses; STATICFILES_STORAGE exists purely so this
 # third-party package doesn't crash reading it.
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # staticfiles backend note: WhiteNoise's CompressedManifestStaticFilesStorage
 # was crashing collectstatic on this environment (Python 3.14 + Django 6.0.6
@@ -175,11 +175,13 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 # middleware still serves everything correctly — you just lose pre-built
 # .gz/.br files, which for a site this size is not a meaningful performance
 # hit. Revisit if/when WhiteNoise ships a fix for this combination.
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+        #"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
