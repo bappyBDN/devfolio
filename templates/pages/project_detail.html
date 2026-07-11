@@ -49,8 +49,16 @@
             <div class="carousel-inner">
                 {% for image in project.images.all %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <img src="{{ image.image.url }}" class="d-block w-100" style="height:460px;object-fit:cover;"
-                         alt="{{ image.caption|default:project.title }}">
+                    
+                    <!-- 🚀 এখানে <img> ট্যাগে পরিবর্তন করা হয়েছে -->
+                    <img src="{{ image.image.url }}" class="d-block w-100" 
+                         style="height:460px; object-fit:cover; cursor: zoom-in;"
+                         alt="{{ image.caption|default:project.title }}"
+                         data-bs-toggle="modal" 
+                         data-bs-target="#imageModal" 
+                         data-img-src="{{ image.image.url }}" 
+                         data-img-caption="{{ image.caption|default:project.title }}">
+                    
                     {% if image.caption %}
                     <div class="carousel-caption d-none d-md-block rounded-3 p-2"
                          style="background: rgba(18,20,28,.65);">

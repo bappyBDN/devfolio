@@ -236,4 +236,30 @@
         chatInput.value = text;
         chatForm.dispatchEvent(new Event('submit'));
     };
+    
+});
+document.addEventListener('DOMContentLoaded', function() {
+    var imageModal = document.getElementById('imageModal');
+    if (imageModal) {
+        imageModal.addEventListener('show.bs.modal', function (event) {
+            // যে ছবিটিতে ক্লিক করা হয়েছে
+            var triggerImg = event.relatedTarget; 
+            
+            // অ্যাট্রিবিউট থেকে ডেটা নেওয়া
+            var src = triggerImg.getAttribute('data-img-src');
+            var caption = triggerImg.getAttribute('data-img-caption');
+            
+            // মডালের ভেতরের ছবি এবং ক্যাপশন ট্যাগ সিলেক্ট করা
+            var modalImg = imageModal.querySelector('#fullSizeImage');
+            var modalCaption = imageModal.querySelector('#fullSizeCaption');
+            
+            // ডেটা সেট করা
+            modalImg.src = src;
+            if(caption && caption !== "None") {
+                modalCaption.textContent = caption;
+            } else {
+                modalCaption.textContent = "";
+            }
+        });
+    }
 });

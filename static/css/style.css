@@ -763,3 +763,55 @@ select:focus-visible,
         border-radius: 50%;
     }
 }
+/* =========================================================================
+   Complete Mobile Responsiveness (Phones & Small Tablets)
+   ========================================================================= */
+@media (max-width: 768px) {
+    /* ১. Typography: মোবাইলের জন্য হেডারের সাইজ কিছুটা ছোট করা */
+    h1 { font-size: 2.2rem !important; }
+    h2 { font-size: 1.8rem !important; }
+    h3 { font-size: 1.4rem !important; }
+    body { font-size: 15px; }
+
+    /* ২. Navbar Adjustments: ছোট স্ক্রিনে মেনুগুলো যেন ভেঙে না যায় */
+    .df-navbar {
+        padding: 10px 0;
+    }
+    .df-nav {
+        display: flex;
+        overflow-x: auto; /* জায়গা না থাকলে ডানে-বামে স্ক্রল করা যাবে */
+        white-space: nowrap; /* লেখা নিচে নেমে যাবে না */
+        padding-bottom: 5px;
+        gap: 0.5rem;
+    }
+    
+    /* ৩. Terminal Window: ছোট স্ক্রিনে ফন্ট এবং প্যাডিং কমানো */
+    .term-body {
+        padding: 1rem;
+        font-size: 0.85rem;
+        min-height: 150px;
+    }
+
+    /* ৪. Projects & Blog Cards: কার্ডের ভেতরের প্যাডিং এবং ছবির হাইট ঠিক করা */
+    .df-card-body {
+        padding: 1rem;
+    }
+    .df-card-media {
+        height: 200px;
+    }
+
+    /* ৫. Contact Form: ফর্মের লেআউট ১০০% উইডথ নেওয়া */
+    .contact-info-row {
+        flex-direction: column; /* আইকন এবং টেক্সট নিচে নিচে আসবে */
+        gap: 0.5rem;
+    }
+    
+    /* ৬. GitHub Timeline: টাইমলাইনের স্পেসিং ঠিক করা */
+    .gitlog { padding-left: 1.8rem; }
+    .gitlog::before { left: 5px; }
+    .gitlog-node {
+        left: -1.8rem;
+        width: 16px;
+        height: 16px;
+    }
+}
