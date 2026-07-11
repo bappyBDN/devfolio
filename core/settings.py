@@ -153,6 +153,18 @@ CLOUDINARY_STORAGE = {
 
 # STORAGES config
 #
+# django-cloudinary-storage ships its own `collectstatic` command override
+# (it takes precedence because 'cloudinary_storage' is listed before
+# 'django.contrib.staticfiles' in INSTALLED_APPS) and that override still
+# reads the legacy `settings.STATICFILES_STORAGE` attribute directly rather
+# than the modern STORAGES dict. Django 6.0 removed the STATICFILES_STORAGE
+# backward-compat shim entirely, so without this explicit line the attribute
+# doesn't exist at all and cloudinary_storage's collectstatic crashes with
+# AttributeError. Keep BOTH settings in sync — STORAGES is what modern
+# Django actually uses; STATICFILES_STORAGE exists purely so this
+# third-party package doesn't crash reading it.
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 # staticfiles backend note: WhiteNoise's CompressedManifestStaticFilesStorage
 # was crashing collectstatic on this environment (Python 3.14 + Django 6.0.6
 # on Render) with a FileNotFoundError deep inside its threaded compression
