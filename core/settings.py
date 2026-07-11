@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)k%q%x$khpa=67(89l*89auo*_-yem^giok)o43^+ks7dml2(%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -138,15 +138,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# WhiteNoise's strict manifest check crashes collectstatic if any CSS file
-# (including Django's OWN admin CSS, e.g. forms.css -> widgets.css) references
-# a file it can't physically locate at build time. Setting this to False
-# tells it to leave that one reference un-hashed instead of failing the
-# entire deploy. This does not remove/break any of your own static files —
-# it only relaxes the check for third-party files Django itself ships.
-WHITENOISE_MANIFEST_STRICT = False
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -160,14 +151,23 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
-# Media ফাইলগুলো এখন থেকে ক্লাউডে সেভ হবে
-#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-# New Django STORAGES Configuration (এটাই আসল ম্যাজিক করবে)
+# STORAGES config
+#
+# staticfiles backend note: WhiteNoise's CompressedManifestStaticFilesStorage
+# was crashing collectstatic on this environment (Python 3.14 + Django 6.0.6
+# on Render) with a FileNotFoundError deep inside its threaded compression
+# step — a WhiteNoise-side bug, not a problem with our own static files.
+# Per WhiteNoise's own troubleshooting guide, swapping to Django's plain
+# ManifestStaticFilesStorage isolates the compression step entirely: you
+# still get cache-busting hashed filenames (e.g. app.db8f2e.css), WhiteNoise
+# middleware still serves everything correctly — you just lose pre-built
+# .gz/.br files, which for a site this size is not a meaningful performance
+# hit. Revisit if/when WhiteNoise ships a fix for this combination.
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
     },
 }
